@@ -90,7 +90,6 @@ int main()
 
 	 loi res = dist[n - 1];
 	 cout << "Case #" << tc << ": " << res << "\n";
-
     }
 
     return 0;

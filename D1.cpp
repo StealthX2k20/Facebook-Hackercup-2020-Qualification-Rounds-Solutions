@@ -42,53 +42,54 @@ int main()
     rep1(tc, t)
     {
         best.clear();
-		freq.clear();
+	freq.clear();
 
         cin >> n >> m;
         
         //loi dist[n], cost[n];
-		rep(i, n + 1) dist[i] = -1;
+	rep(i, n + 1) dist[i] = -1;
 
-		in(cost, n);
-        if(n == m)
-		{
-			cout << "Case #" << tc << ": 0\n";
-			continue;
-		}
+	in(cost, n);
+        
+	if(n == m)
+	{
+	  cout << "Case #" << tc << ": 0\n";
+	  continue;
+	}
 
-		loi cur = 0;
-		rep(i, m + 1)
-		{
+	loi cur = 0;
+	rep(i, m + 1)
+	{
           dist[i] = 0;
-		  if(cost[i] and i)
-            best.insert(cost[i]), freq[cost[i]]++;
-		}
+	  if(cost[i] and i)
+           best.insert(cost[i]), freq[cost[i]]++;
+	 }
 
         rep3(i, m + 1, n - 1)
-		{
-			cur++;
-			if(best.size() == 0)
-			dist[i] = -1;
+	{
+	   cur++;
+	   if(best.size() == 0)
+	     dist[i] = -1;
 
-			else dist[i] = *(best.begin());
+	   else dist[i] = *(best.begin());
 		
-		    if(cost[i] and dist[i] != -1)
-			{
+	   if(cost[i] and dist[i] != -1)
+	   {
               best.insert(dist[i] + cost[i]);
-			  freq[(dist[i] + cost[i])]++;
-			}
+	      freq[(dist[i] + cost[i])]++;
+	   }
             
-			if(cost[cur] and dist[cur] != -1)
-			{
-				if(freq[(dist[cur] + cost[cur])] == 1)
-				best.erase(best.find(dist[cur] + cost[cur])), freq[(dist[cur] + cost[cur])]--;
+	   if(cost[cur] and dist[cur] != -1)
+	   {
+		if(freq[(dist[cur] + cost[cur])] == 1)
+		    best.erase(best.find(dist[cur] + cost[cur])), freq[(dist[cur] + cost[cur])]--;
 		        
-				else freq[(dist[cur] + cost[cur])]--;
-			}
-		}
+		else freq[(dist[cur] + cost[cur])]--;
+	   }
+         }
 
-		loi res = dist[n - 1];
-		cout << "Case #" << tc << ": " << res << "\n";
+	 loi res = dist[n - 1];
+	 cout << "Case #" << tc << ": " << res << "\n";
 
     }
 

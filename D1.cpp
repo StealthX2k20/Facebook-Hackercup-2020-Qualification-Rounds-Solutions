@@ -24,11 +24,11 @@ using namespace std;
 #define mxdepth 23 // FOR LCA til N = 1e6
 #define mxn 2000001
 
-bool cmpr(pii p1, pii p2)
-{
-    if(p1.first == p2.first) return p1.second < p2.second;
-    return p1.first < p2.first;
-}
+loi n, m;
+loi dist[1000010], cost[1000010];
+
+set <loi> best;
+unordered_map<loi, loi> freq;
 
 int main()
 {
@@ -41,85 +41,55 @@ int main()
     
     rep1(tc, t)
     {
-        loi n;
-        cin >> n;
+        best.clear();
+		freq.clear();
+
+        cin >> n >> m;
         
-        vector< pii > tree;
-        pii pt;
+        //loi dist[n], cost[n];
+		rep(i, n + 1) dist[i] = -1;
 
-        rep(i, n)
-        {   //.....Pi.........Hi......
-            cin >> pt.first >> pt.second;
-            tree.pb(pt);
-        }
-        
-        if(n == 1)
-        {
-            cout << "Case #" << tc << ": " << tree[0].second << "\n";
-            continue;
-        }
+		in(cost, n);
+        if(n == m)
+		{
+			cout << "Case #" << tc << ": 0\n";
+			continue;
+		}
 
-        loi p, h;
+		loi cur = 0;
+		rep(i, m + 1)
+		{
+          dist[i] = 0;
+		  if(cost[i] and i)
+            best.insert(cost[i]), freq[cost[i]]++;
+		}
 
-        sort(all(tree), cmpr);
+        rep3(i, m + 1, n - 1)
+		{
+			cur++;
+			if(best.size() == 0)
+			dist[i] = -1;
 
-        loi res = -1 * lim, cur = -1 * lim;
-        mii mp;
-
-        /*
-        0 -> no cut
-        1 -> left cut
-        2 -> right cut
-        */
-
-        rep(i, n)
-        {
-            p = tree[i].first;
-            h = tree[i].second;
+			else dist[i] = *(best.begin());
+		
+		    if(cost[i] and dist[i] != -1)
+			{
+              best.insert(dist[i] + cost[i]);
+			  freq[(dist[i] + cost[i])]++;
+			}
             
-            cur = -1 * lim;
+			if(cost[cur] and dist[cur] != -1)
+			{
+				if(freq[(dist[cur] + cost[cur])] == 1)
+				best.erase(best.find(dist[cur] + cost[cur])), freq[(dist[cur] + cost[cur])]--;
+		        
+				else freq[(dist[cur] + cost[cur])]--;
+			}
+		}
 
-            if(mp.find(p - h) != mp.end())
-             cur = max(cur, abs(p - (mp.find(p - h) -> second)));
+		loi res = dist[n - 1];
+		cout << "Case #" << tc << ": " << res << "\n";
 
-            if(mp.find(p) != mp.end())
-            cur = max(cur, abs(p - (mp.find(p) -> second)));
-
-            if(mp.find(p) != mp.end())
-            cur = max(cur, abs(p + h - (mp.find(p) -> second)));
-            
-            cur = max(cur, h);
-
-            res = max(res, cur);
-
-            cur = lim;
-
-            if(mp.find(p - h) != mp.end())
-            cur = min(cur, mp.find(p - h) -> second);
-
-            if(mp.find(p) != mp.end())
-            cur = min(cur, mp.find(p) -> second);
-
-            if(cur == lim) cur = p - h;
-            else cur = min(cur, p - h);
-            
-            loi xt = mp.find(p) == mp.end() ? p : mp.find(p) -> second;
-
-            if(mp.find(p + h) == mp.end())
-            mp.insert(mkp(p + h, xt));
-
-            else if(mp.find(p + h) -> second > xt)
-            mp.find(p + h) -> second = xt;
-
-            if(mp.find(p) == mp.end())
-            mp.insert(mkp(p, cur));
-
-            else if(mp.find(p) -> second > cur)
-            mp.find(p) -> second = cur;
-
-        }
-
-        cout << "Case #" << tc << ": " << res << "\n";
     }
 
     return 0;
